@@ -1,0 +1,19 @@
+<head>
+  <title>Locaverse, your local and organic foods market</title>
+</head>
+
+<template name="userProfileForm">
+  {{> quickForm schema="Schema.UserProfile" id="userProfileForm"}}
+</template>
+
+<template name="addressForm">
+  {{> quickForm schema="Schema.Address" id="addressForm"}}
+</template>
+
+<template name="Home">
+  <h1>Welcome to Locaverse!</h1>
+
+  {{> userProfileForm}}
+
+  {{> addressForm}}
+</template>

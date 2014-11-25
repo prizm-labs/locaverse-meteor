@@ -1,6 +1,6 @@
-var Schemas = {};
+Schema = {}
 
-AddressSchema = new SimpleSchema({
+Schema.Address = new SimpleSchema({
   street: {
     type: String,
     max: 100
@@ -19,7 +19,7 @@ AddressSchema = new SimpleSchema({
   }
 });
 
-LocationSchema = new SimpleSchema({
+Schema.Location = new SimpleSchema({
     lat: {
         type: Number
     },
@@ -31,16 +31,17 @@ LocationSchema = new SimpleSchema({
     }
 });
 
-Schemas.Company = new SimpleSchema({
+Schema.Company = new SimpleSchema({
     name: {
         type: String,
         label: "Name"
     }, 
     billingAddress: {
-        type: AddressSchema
+        type: Schema.Address,
+        optional: true
     },
     shippingAddresses: {
-        type: [AddressSchema],
+        type: [Schema.Address],
         minCount: 1
     },
     phone_number: {
@@ -50,11 +51,13 @@ Schemas.Company = new SimpleSchema({
     }
 });
 
-Schemas.Buyer = new SimpleSchema({
+Schema.Buyer = new SimpleSchema({
     
     buyer_type: {
         type: String,
-        label: "Buyer Type"
+        label: "Buyer Type",
+        allowedValues: [
+        ]
         // regex: enum?
     },
     purchases_per_month: {
@@ -75,11 +78,18 @@ Schemas.Buyer = new SimpleSchema({
     }
 });
 
-Schemas.Farmer = new SimpleSchema({
+Schema.Farmer = new SimpleSchema({
     
     growing_practices: {
-        type: [String]
+        type: Object
     },
+    "growing_practices.usda_organic": {
+        type: Boolean
+    },
+    "growing_practices.rainforest_alliance": {
+        type: Boolean
+    },
+
     company_id: {
         type: String
     },
@@ -94,7 +104,7 @@ Schemas.Farmer = new SimpleSchema({
     }
 });
 
-Schemas.Image = new SimpleSchema({
+Schema.Image = new SimpleSchema({
     file_name: {
         type: String
     },
@@ -109,7 +119,7 @@ Schemas.Image = new SimpleSchema({
     }
 });
 
-Schemas.InventoryItem = new SimpleSchema({
+Schema.InventoryItem = new SimpleSchema({
     quantity_available: {
         type: Number
     },
@@ -130,7 +140,7 @@ Schemas.InventoryItem = new SimpleSchema({
     }
 });
 
-Schemas.ShipDate = new SimpleSchema({
+Schema.ShipDate = new SimpleSchema({
     date: {
         type: Date
     },
@@ -139,7 +149,7 @@ Schemas.ShipDate = new SimpleSchema({
     }
 });
 
-Schemas.Variety = new SimpleSchema({
+Schema.Variety = new SimpleSchema({
     name: {
         type: String
     },
@@ -160,36 +170,29 @@ Schemas.Variety = new SimpleSchema({
 
 Schema.UserProfile = new SimpleSchema({
     firstName: {
+        label: "Last Name",
         type: String,
-        regEx: /^[a-zA-Z-]{2,25}$/,
-        optional: true
+        regEx: /^[a-zA-Z-]{2,25}$/
     },
     lastName: {
+        label: "First Name",
         type: String,
-        regEx: /^[a-zA-Z]{2,25}$/,
-        optional: true
-    },
-    gender: {
-        type: String,
-        allowedValues: ['Male', 'Female'],
-        optional: true
+        regEx: /^[a-zA-Z]{2,25}$/
     },
     default_image_id: {
         type: String,
-        label: "Profile Image"
+        autoform: {
+            omit: true
+        }
     }
 });
 
 Schema.User = new SimpleSchema({
-    username: {
-        type: String,
-        regEx: /^[a-z0-9A-Z_]{3,15}$/
-    },
     emails: {
-        type: [Object],
+        type: [Object]
         // this must be optional if you also use other login services like facebook,
         // but if you use only accounts-password, then it can be required
-        optional: true
+        // optional: true
     },
     "emails.$.address": {
         type: String,
@@ -221,4 +224,78 @@ Schema.User = new SimpleSchema({
         optional: true,
         blackbox: true
     }
+});
+
+
+Forms = {};
+
+Forms.userSignup = new SimpleSchema(
+    [Schema.UserProfile, Schema.Address], {
+        password: {
+            type: String, 
+            minCount: 7
+        },
+        password_confirmation: {
+            type: String, 
+            minCount: 7
+        },
+        email: {
+            type: String,
+            regEx: SimpleSchema.RegEx.Email
+        },
+        company_name: {
+            type: String
+        },
+        phone_number: {
+            type: String
+        },
+
+        // if Farmer
+        growing_pracices: {
+            type: [String],
+            autoform: {
+              type: "select-checkbox-inline",
+              options: function () {
+                return [
+                  {label: "USDA Organic", value: "usda_organic"},
+                  {label: "Rainforest Alliance", value: "rainforest_alliance"}
+                ];
+              }
+            }
+        }
+
+        // if Buyer
+        buyer_type: {
+            type: String,
+            autoform: {
+              type: "select",
+              options: function () {
+                return [
+                  {label: "Retail", value: "retail"},
+                  {label: "Restaurant", value: "restaurant"},
+                  {label: "Food Service", value: "food_service"},
+                  {label: "Other", value: "other"}
+                ];
+              }
+            }
+        },
+        buyer_type_custom: {
+            type: String,
+            optional: true
+        },
+        buyer_budget: {
+            type: [Number],
+            autoform: {
+              type: "select",
+              options: function () {
+                return [
+                    {label: "Less than $1000", value: [1,999]},
+                    {label: "$1,000 - $5,000", value: [1000,5000]},
+                    {label: "$5,000 - $10,000", value: [5001,10000]},
+                    {label: "$10,000 - $20,000", value: [10001,20000]},
+                    {label: "More than $20,000", value: [20000,999999]}
+                ]
+              }
+            }
+        }
 });
