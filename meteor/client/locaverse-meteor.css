@@ -23,3 +23,7 @@
 .af-radio-group {
   padding-top: 6px;
 }
+.control-label .required-field-indicator {
+  color: rgb(239, 130, 0);
+  font-weight: bold;
+}

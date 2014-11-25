@@ -1,3 +1,9 @@
+SimpleSchema.messages({
+  "required": "Please complete this field",
+  "passwordMismatch": "Passwords do not match",
+  "required buyer_budget": "Please choose an estimate"
+});
+
 Schema = {}
 
 Schema.Address = new SimpleSchema({
@@ -231,18 +237,39 @@ Schema.User = new SimpleSchema({
 Forms = {};
 
 Forms.userSignup = new SimpleSchema(
-    [ Schema.UserProfile,
+    [
     Schema.Address, // Company Address
-    {
+    {   
+        firstName: {
+            label: "First Name",
+            type: String,
+            regEx: /^[a-zA-Z-]{2,25}$/
+        },
+        lastName: {
+            label: "Last Name",
+            type: String,
+            regEx: /^[a-zA-Z]{2,25}$/
+        },
         password: {
             type: String, 
             minCount: 7,
-            label: "Password"
+            label: "Password",
+            autoform: {
+              type: "password"
+            }
         },
         password_confirmation: {
             type: String, 
             minCount: 7,
-            label: "Confirm Password"
+            label: "Confirm Password",
+            autoform: {
+              type: "password"
+            },
+            custom: function () {
+              if (this.value !== this.field('password').value) {
+                return "passwordMismatch";
+              }
+            }
         },
         email: {
             type: String,
@@ -269,7 +296,8 @@ Forms.userSignup = new SimpleSchema(
         },
         company_description: {
             type: String,
-            label: "Description"
+            label: "Description",
+            optional: true
         },
         phone_number: {
             type: String

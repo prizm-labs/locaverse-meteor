@@ -9,39 +9,61 @@
 
 </template>
 
+<template name="afFancyFormGroup">
+  <div class="form-group {{#if afFieldIsInvalid name=name}}has-error{{/if}}">
+    <label class="control-label">
+      {{#if isRequiredField}}
+        <span class="required-field-indicator">*</span>&nbsp;
+      {{/if}}
+      {{afFieldLabelText name=name}}</label>
+    <!-- {{> afFieldInput name=name}} -->
+    {{> afFieldInput fieldConfiguration}}
+    {{#if afFieldIsInvalid name=name}}
+    <span class="help-block">{{{afFieldMessage name=name}}}</span>
+    {{/if}}
+  </div>
+</template>
 
 <template name="userSignupForm">
   <div style="width: 900px">
-  {{#autoForm schema="Forms.userSignup" id="userSignupForm" class="form-horizontal"}}
+  {{#autoForm schema="Forms.userSignup" id="userSignupForm" class="form-horizontal" type="method" meteormethod="registerUser"}}
+  {{this.schema}}
   <fieldset>
     <legend>User Information:</legend>
-    {{> afQuickField name='email' template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
-    {{> afFormGroup name='firstName' }}
-    {{> afQuickField name='lastName'}}
-    {{> afQuickField name='password'}}
-    {{> afQuickField name='password_confirmation'}}
+    {{> afFancyFormGroup name='email'}}
+    {{> afFancyFormGroup name='firstName'}}
+    {{> afFancyFormGroup name='lastName'}}
+    {{> afFancyFormGroup name='password'}}
+    {{> afFancyFormGroup name='password_confirmation'}}
   </fieldset>
   <fieldset>
     <legend>Company Information:</legend>
-    {{> afQuickField name='company_name'}}
-    {{> afQuickField name='street'}}
-    {{> afQuickField name='city'}}
-    {{> afQuickField name='state'}}
-    {{> afQuickField name='zip'}}
-    {{> afQuickField name='phone_number'}}
-    {{> afQuickField name='company_description' rows=4}}
+    {{> afFancyFormGroup name='company_name'}}
+    {{> afFancyFormGroup name='street'}}
+    {{> afFancyFormGroup name='city'}}
+    {{> afFancyFormGroup name='state'}}
+    {{> afFancyFormGroup name='zip'}}
+    {{> afFancyFormGroup name='phone_number'}}
+    {{> afFancyFormGroup name='company_description' rows=4}}
   </fieldset>
   <fieldset>
     <legend>Account Details:</legend>
     {{> afQuickField name='account_type'}}
 
-    {{> afQuickField name='buyer_type'}}
-    {{> afQuickField name='buyer_budget'}}
+    {{#if afFieldValueIs name="account_type" value="buyer"}}
+      {{> afFancyFormGroup name='buyer_type'}}
+      {{> afFancyFormGroup name='buyer_budget'}}
+    {{/if}}
 
-    {{> afQuickField name='growing_practices'}}
+    {{#if afFieldValueIs name="account_type" value="farmer"}}
+      {{> afFancyFormGroup name='growing_practices'}}
+    {{/if}}
   </fieldset>
   
-  <button type="submit" class="btn btn-primary">Sign Up</button>
+  {{#if accountTypeIsSelected}}
+    <button type="submit" class="btn btn-primary btn-large">Sign Up</button>
+  {{/if}}
+
   {{/autoForm}}
 </div>
 </template>
