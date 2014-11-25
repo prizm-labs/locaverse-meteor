@@ -170,12 +170,12 @@ Schema.Variety = new SimpleSchema({
 
 Schema.UserProfile = new SimpleSchema({
     firstName: {
-        label: "Last Name",
+        label: "First Name",
         type: String,
         regEx: /^[a-zA-Z-]{2,25}$/
     },
     lastName: {
-        label: "First Name",
+        label: "Last Name",
         type: String,
         regEx: /^[a-zA-Z]{2,25}$/
     },
@@ -226,33 +226,60 @@ Schema.User = new SimpleSchema({
     }
 });
 
+//AutoForm.debug()
 
 Forms = {};
 
 Forms.userSignup = new SimpleSchema(
-    [Schema.UserProfile, Schema.Address], {
+    [ Schema.UserProfile,
+    Schema.Address, // Company Address
+    {
         password: {
             type: String, 
-            minCount: 7
+            minCount: 7,
+            label: "Password"
         },
         password_confirmation: {
             type: String, 
-            minCount: 7
+            minCount: 7,
+            label: "Confirm Password"
         },
         email: {
             type: String,
             regEx: SimpleSchema.RegEx.Email
         },
+
+        
+        account_type: {
+            type: String,
+            label: "I am a...",
+            autoform: {
+              type: "select-radio-inline",
+              options: function () {
+                return [
+                  {label: "Buyer", value: "buyer"},
+                  {label: "Farmer", value: "farmer"}
+                ];
+              }
+            }
+          },
         company_name: {
-            type: String
+            type: String,
+            label: "Company Name"
+        },
+        company_description: {
+            type: String,
+            label: "Description"
         },
         phone_number: {
             type: String
         },
 
         // if Farmer
-        growing_pracices: {
+        growing_practices: {
             type: [String],
+            optional: true,
+            label: "Growing Practices",
             autoform: {
               type: "select-checkbox-inline",
               options: function () {
@@ -262,10 +289,11 @@ Forms.userSignup = new SimpleSchema(
                 ];
               }
             }
-        }
+        },
 
         // if Buyer
         buyer_type: {
+            label: "Buyer Type",
             type: String,
             autoform: {
               type: "select",
@@ -280,22 +308,25 @@ Forms.userSignup = new SimpleSchema(
             }
         },
         buyer_type_custom: {
+            label: "How would you describe your business?",
             type: String,
             optional: true
         },
         buyer_budget: {
-            type: [Number],
+            type: Number,
+            label: "What is your current monthly expense for fresh produce?",
             autoform: {
               type: "select",
               options: function () {
                 return [
-                    {label: "Less than $1000", value: [1,999]},
-                    {label: "$1,000 - $5,000", value: [1000,5000]},
-                    {label: "$5,000 - $10,000", value: [5001,10000]},
-                    {label: "$10,000 - $20,000", value: [10001,20000]},
-                    {label: "More than $20,000", value: [20000,999999]}
+                    {label: "Less than $1000", value: 1},
+                    {label: "$1,000 - $5,000", value: 2},
+                    {label: "$5,000 - $10,000", value: 3},
+                    {label: "$10,000 - $20,000", value: 4},
+                    {label: "More than $20,000", value: 5}
                 ]
               }
             }
         }
-});
+    }
+]);

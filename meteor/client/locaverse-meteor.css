@@ -1,1 +1,25 @@
 /* CSS declarations go here */
+.help-block, .form-group {
+  clear: both;
+}
+.form-horizontal .control-label {
+  margin-right: 10px;
+}
+.radio-inline, .form-horizontal .help-block {
+  display: inline-block;
+}
+.radio-inline {
+  padding-right: 6px;
+}
+.form-horizontal .help-block {
+  color: red;
+  font-style: italic;
+  margin-top: 0 !important;
+  padding-left: 4px;
+}
+.form-group {
+  margin-top: 6px;
+}
+.af-radio-group {
+  padding-top: 6px;
+}

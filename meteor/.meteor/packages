@@ -12,12 +12,8 @@ stylus
 email
 iron:router
 alanning:roles
-velocity:core
-mike:mocha
-urigo:angular
 spiderable
 accounts-password
 underscore
 bootstrap
 coffeescript
-

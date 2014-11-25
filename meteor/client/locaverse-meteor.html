@@ -2,18 +2,48 @@
   <title>Locaverse, your local and organic foods market</title>
 </head>
 
-<template name="userProfileForm">
-  {{> quickForm schema="Schema.UserProfile" id="userProfileForm"}}
-</template>
-
-<template name="addressForm">
-  {{> quickForm schema="Schema.Address" id="addressForm"}}
-</template>
-
 <template name="Home">
   <h1>Welcome to Locaverse!</h1>
 
-  {{> userProfileForm}}
+  {{> userSignupForm}}
 
-  {{> addressForm}}
 </template>
+
+
+<template name="userSignupForm">
+  <div style="width: 900px">
+  {{#autoForm schema="Forms.userSignup" id="userSignupForm" class="form-horizontal"}}
+  <fieldset>
+    <legend>User Information:</legend>
+    {{> afQuickField name='email' template="bootstrap3-horizontal" label-class="col-sm-3" input-col-class="col-sm-9"}}
+    {{> afFormGroup name='firstName' }}
+    {{> afQuickField name='lastName'}}
+    {{> afQuickField name='password'}}
+    {{> afQuickField name='password_confirmation'}}
+  </fieldset>
+  <fieldset>
+    <legend>Company Information:</legend>
+    {{> afQuickField name='company_name'}}
+    {{> afQuickField name='street'}}
+    {{> afQuickField name='city'}}
+    {{> afQuickField name='state'}}
+    {{> afQuickField name='zip'}}
+    {{> afQuickField name='phone_number'}}
+    {{> afQuickField name='company_description' rows=4}}
+  </fieldset>
+  <fieldset>
+    <legend>Account Details:</legend>
+    {{> afQuickField name='account_type'}}
+
+    {{> afQuickField name='buyer_type'}}
+    {{> afQuickField name='buyer_budget'}}
+
+    {{> afQuickField name='growing_practices'}}
+  </fieldset>
+  
+  <button type="submit" class="btn btn-primary">Sign Up</button>
+  {{/autoForm}}
+</div>
+</template>
+
+
