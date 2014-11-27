@@ -1,7 +1,23 @@
+RegExCustom = {
+    name: /^[a-zA-Z-]{2,25}$/,
+    phoneNumber: /^[0-9]{10,11}$/,
+    phoneNumberFormatted: /^[0-9]{7,8}$/,
+    stateAddress: /^A[LKSZRAEP]|C[AOT]|D[EC]|F[LM]|G[AU]|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]$/,
+    zipCode: /^[0-9]{5}$/,
+    personName: /^[a-zA-Z-]{2,25}$/
+}
+
 SimpleSchema.messages({
   "required": "Please complete this field",
   "passwordMismatch": "Passwords do not match",
-  "required buyer_budget": "Please choose an estimate"
+  "required buyer_budget": "Please choose an estimate",
+  "regEx firstName": [
+    {exp: RegExCustom.name, msg: "Please enter your name"}
+  ],
+  "state": "Please enter 2-letter state code",
+  "regEx phone_number": [
+    {exp: RegExCustom.phoneNumber, msg: "Please enter numbers only"}
+  ]
 });
 
 Schema = {}
@@ -17,11 +33,11 @@ Schema.Address = new SimpleSchema({
   },
   state: {
     type: String,
-    regEx: /^A[LKSZRAEP]|C[AOT]|D[EC]|F[LM]|G[AU]|HI|I[ADLN]|K[SY]|LA|M[ADEHINOPST]|N[CDEHJMVY]|O[HKR]|P[ARW]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]$/
+    regEx: RegExCustom.stateAddress
   },
   zip: {
     type: String,
-    regEx: /^[0-9]{5}$/
+    regEx: RegExCustom.zipCode
   }
 });
 
@@ -42,34 +58,27 @@ Schema.Company = new SimpleSchema({
         type: String,
         label: "Name"
     }, 
+    description: {
+        type: String,
+        label: "Description",
+        optional: true
+    }, 
     billingAddress: {
         type: Schema.Address,
         optional: true
     },
-    shippingAddresses: {
-        type: [Schema.Address],
-        minCount: 1
+    shippingAddress: {
+        type: Schema.Address
     },
     phone_number: {
         type: String,
-        label: "Phone Number"
-        // regex: xxx-xxx-xxxx
+        label: "Phone Number",
+        regEx: RegExCustom.phoneNumber
     }
 });
 
 Schema.Buyer = new SimpleSchema({
     
-    buyer_type: {
-        type: String,
-        label: "Buyer Type",
-        allowedValues: [
-        ]
-        // regex: enum?
-    },
-    purchases_per_month: {
-        type: String,
-        label: "Purchases per month"
-    },
     company_id: {
         type: String
     },
@@ -81,6 +90,21 @@ Schema.Buyer = new SimpleSchema({
         type: String,
         label: "Description",
         optional: true
+    },
+    buyer_type: {
+        type: String,
+        label: "Buyer Type",
+        allowedValues: [
+        "retail","restaurant","food_service","other"
+        ]
+    },
+    buyer_type_custom: {
+        type: String,
+        optional: true
+    },
+    budget_monthly: {
+        type: Number,
+        label: "Monthly Budget"
     }
 });
 
@@ -178,7 +202,7 @@ Schema.UserProfile = new SimpleSchema({
     firstName: {
         label: "First Name",
         type: String,
-        regEx: /^[a-zA-Z-]{2,25}$/
+        regEx: RegExCustom.personName
     },
     lastName: {
         label: "Last Name",
@@ -240,15 +264,16 @@ Forms.userSignup = new SimpleSchema(
     [
     Schema.Address, // Company Address
     {   
+        // User Information
         firstName: {
             label: "First Name",
             type: String,
-            regEx: /^[a-zA-Z-]{2,25}$/
+            regEx: RegExCustom.personName
         },
         lastName: {
             label: "Last Name",
             type: String,
-            regEx: /^[a-zA-Z]{2,25}$/
+            regEx: RegExCustom.personName
         },
         password: {
             type: String, 
@@ -276,7 +301,22 @@ Forms.userSignup = new SimpleSchema(
             regEx: SimpleSchema.RegEx.Email
         },
 
-        
+        // Company Information
+        company_name: {
+            type: String,
+            label: "Company Name"
+        },
+        company_description: {
+            type: String,
+            label: "Description",
+            optional: true
+        },
+        phone_number: {
+            type: String,
+            regEx: RegExCustom.phoneNumber
+        },
+
+        // Account Details
         account_type: {
             type: String,
             label: "I am a...",
@@ -290,19 +330,6 @@ Forms.userSignup = new SimpleSchema(
               }
             }
           },
-        company_name: {
-            type: String,
-            label: "Company Name"
-        },
-        company_description: {
-            type: String,
-            label: "Description",
-            optional: true
-        },
-        phone_number: {
-            type: String
-        },
-
         // if Farmer
         growing_practices: {
             type: [String],
@@ -323,6 +350,7 @@ Forms.userSignup = new SimpleSchema(
         buyer_type: {
             label: "Buyer Type",
             type: String,
+            optional: true,
             autoform: {
               type: "select",
               options: function () {
@@ -333,6 +361,11 @@ Forms.userSignup = new SimpleSchema(
                   {label: "Other", value: "other"}
                 ];
               }
+            },
+            custom: function () {
+              if (this.field('account_type').value=='buyer' && !this.isSet) {
+                return "required";
+              }
             }
         },
         buyer_type_custom: {
@@ -342,6 +375,7 @@ Forms.userSignup = new SimpleSchema(
         },
         buyer_budget: {
             type: Number,
+            optional: true,
             label: "What is your current monthly expense for fresh produce?",
             autoform: {
               type: "select",
@@ -353,6 +387,11 @@ Forms.userSignup = new SimpleSchema(
                     {label: "$10,000 - $20,000", value: 4},
                     {label: "More than $20,000", value: 5}
                 ]
+              }
+            },
+            custom: function () {
+              if (this.field('account_type').value=='buyer' && !this.isSet) {
+                return "required";
               }
             }
         }

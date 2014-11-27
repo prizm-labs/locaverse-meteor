@@ -1,6 +1,26 @@
-if (Meteor.isClient) {
-
   AutoForm.debug();
+
+  AutoForm.hooks({
+    userSignupForm: {
+      beginSubmit: function(formId, template) {
+        // Loading spinner
+        console.log('beginSubmit');
+      },
+      endSubmit: function(formId, template) {
+        console.log('endSubmit');
+      },
+      onSuccess: function(operation, result, template) {
+        console.log('onSuccess',result);
+        // Transition to email confirmation
+
+        // Route to registration successful page
+        Router.go('signup-success');
+      }, 
+      onError: function(operation, error, template) {
+        console.log('onError',error);
+      }
+    }
+  });
 
   // // counter starts at 0
   // Session.setDefault("counter", 0);
@@ -31,31 +51,18 @@ if (Meteor.isClient) {
       //console.log(this);
       var schema = AutoForm.getSchemaForField(this.name);
       return (typeof schema.optional==='undefined');
-    }
-  });
-
-  Template.afFancyFormGroup.fieldConfiguration = function(){
+    },
+    fieldConfiguration: function(){
       //console.log('fieldConfiguration',this);
       return _.clone(this)
     }
+  });
+
+  // Template.afFancyFormGroup.fieldConfiguration = function(){
+  //     //console.log('fieldConfiguration',this);
+  //     return _.clone(this)
+  //   }
 
   Template.afFancyFormGroup.rendered = function(){
     var schema = AutoForm.getSchemaForField(this.data.name);
   }
-}
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-  });
-
-
-  Meteor.methods({
-    registerUser: function(doc){
-
-      console.log('registerUser',doc);
-
-    }
-  });
-}
-

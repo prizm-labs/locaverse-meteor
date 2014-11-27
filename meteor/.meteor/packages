@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 aldeed:collection2
 aldeed:autoform
@@ -17,3 +16,7 @@ accounts-password
 underscore
 bootstrap
 coffeescript
+accounts-base
+velocity:core
+velocity:html-reporter
+mike:mocha

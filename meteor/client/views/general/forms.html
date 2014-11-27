@@ -1,14 +1,3 @@
-<head>
-  <title>Locaverse, your local and organic foods market</title>
-</head>
-
-<template name="Home">
-  <h1>Welcome to Locaverse!</h1>
-
-  {{> userSignupForm}}
-
-</template>
-
 <template name="afFancyFormGroup">
   <div class="form-group {{#if afFieldIsInvalid name=name}}has-error{{/if}}">
     <label class="control-label">
@@ -17,7 +6,8 @@
       {{/if}}
       {{afFieldLabelText name=name}}</label>
     <!-- {{> afFieldInput name=name}} -->
-    {{> afFieldInput fieldConfiguration}}
+    <!-- {{> afFieldInput fieldConfiguration}} -->
+    {{> Template.dynamic template="afFieldInput" data=fieldConfiguration}}
     {{#if afFieldIsInvalid name=name}}
     <span class="help-block">{{{afFieldMessage name=name}}}</span>
     {{/if}}
@@ -67,5 +57,3 @@
   {{/autoForm}}
 </div>
 </template>
-
-

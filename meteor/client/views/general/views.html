@@ -1,0 +1,90 @@
+<head>
+  <title>Locaverse, your local and organic foods market</title>
+</head>
+
+<template name="PublicLayout">
+  <header>
+    {{> yield "header"}}
+  </header>
+
+  <div id="main">
+    {{> yield}}
+  </div>
+
+  <footer>
+    {{> yield "footer"}}
+  </footer>
+</template>
+
+<template name="ApplicationLayout">
+  <header>
+    {{> yield "header"}}
+  </header>
+
+  <div id="main">
+    {{> yield}}
+  </div>
+
+  <footer>
+    {{> yield "footer"}}
+  </footer>
+</template>
+
+<template name="HeaderGeneral">
+  <div>Locaverse</div>
+  <button>Sign In</button>
+</template>
+
+<template name="HeaderUser">
+  <div>Locaverse</div>
+  <ul>
+    {{#each navigation}}
+    <a href="{{route}}"><li>{{title}}</li></a>
+    {{/each}}
+  </ul>
+  <button>Log out</button>
+</template>
+
+<template name="Landing">
+  <h1>Welcome to Locaverse!</h1>
+  <a href="/signup">Sign Up</a>
+</template>
+
+<template name="Dashboard">
+  <h1>Dashboard</h1>
+
+</template>
+
+<template name="Marketplace">
+  <h1>Marketplace</h1>
+  {{#each inventoryItem}}
+
+  {{/each}}
+</template>
+
+<template name="Farmer">
+  <h1>Farmer</h1>
+
+</template>
+
+<template name="Venue">
+  <h1>Venue</h1>
+
+</template>
+
+<template name="Orders">
+  <h1>Orders</h1>
+
+</template>
+
+<template name="Checkout">
+  <h1>Checkout</h1>
+
+</template>
+
+<template name="Account">
+  <h1>Account</h1>
+
+</template>
+
+
