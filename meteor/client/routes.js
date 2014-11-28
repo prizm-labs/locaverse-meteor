@@ -17,7 +17,7 @@ Router.route('/', function () {
     });
 
   }
-});
+}, {name:'landing'});
 
 Router.route('/signup', function () {
 
@@ -29,6 +29,14 @@ Router.route('/signup', function () {
     }
   });
 });
+
+Router.route('/login', function () {
+  this.render('LoginFullPage', {
+    data: function () { 
+      //return Items.findOne({_id: this.params._id}) 
+    }
+  });
+}, { name:'login-fullpage' });
 
 Router.route('/signup/success', function () {
   this.render('SignupSuccess', {
@@ -100,7 +108,7 @@ Router.route('/home', function () {
     data: function () { 
     }
   });
-});
+}, {name: "dashboard"});
 
 Router.route('/account', function () {
   this.render('Account', {

@@ -15,6 +15,10 @@
   }
 
   Meteor.methods({
+    loginUser: function(doc){
+      console.log('loginUser',doc);
+
+    },
     registerUser: function(doc){
       console.log('registerUser',doc);
 
@@ -39,7 +43,13 @@
       Accounts.sendVerificationEmail(newUser);
       console.log('registerUser exit');
 
-      return true;
+      // Data for signup confirmation page
+      return {
+        user_id: newUser,
+        firstName: doc.firstName,
+        lastName: doc.lastName,
+        email: doc.email
+      };
     }
   });
 

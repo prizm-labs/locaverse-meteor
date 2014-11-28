@@ -260,6 +260,22 @@ Schema.User = new SimpleSchema({
 
 Forms = {};
 
+Forms.userLogin = new SimpleSchema(
+    {
+        email: {
+            type: String,
+            regEx: SimpleSchema.RegEx.Email
+        },
+        password: {
+            type: String, 
+            minCount: 7,
+            label: "Password",
+            autoform: {
+              type: "password"
+            }
+        }
+    });
+
 Forms.userSignup = new SimpleSchema(
     [
     Schema.Address, // Company Address

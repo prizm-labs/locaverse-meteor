@@ -14,10 +14,22 @@
   </div>
 </template>
 
+<template name="userLoginForm">
+  <div style="width: 900px">
+    <fieldset>
+      {{#autoForm schema="Forms.userLogin" id="userLoginForm" class="form-horizontal" type="method" meteormethod="loginUser"}}
+        {{> afFancyFormGroup name='email'}}
+        {{> afFancyFormGroup name='password'}}
+      {{/autoForm}}
+      <button type="submit" class="btn btn-primary btn-large">Login</button>
+    </fieldset>
+  </div>
+</template>
+
+
 <template name="userSignupForm">
   <div style="width: 900px">
   {{#autoForm schema="Forms.userSignup" id="userSignupForm" class="form-horizontal" type="method" meteormethod="registerUser"}}
-  {{this.schema}}
   <fieldset>
     <legend>User Information:</legend>
     {{> afFancyFormGroup name='email'}}

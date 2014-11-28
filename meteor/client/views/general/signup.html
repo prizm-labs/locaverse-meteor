@@ -1,3 +1,22 @@
+<template name="LoginFullPage">
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label class="control-label">Email</label>
+      <input type="text" name="email" required="" data-schema-key="email" class="form-control" id="email">    
+    </div>
+    <div class="form-group">
+      <label class="control-label">Password</label> 
+      <input type="password" name="password" required="" data-schema-key="password" class="form-control" id="password">
+    </div>
+    <div>{{validationMessage}}</div>
+    <button class="btn btn-primary btn-large" id="login">Login</button>
+  </div>
+
+  {{#if loggingIn}}
+  Logging in...
+  {{/if}}
+</template>
+
 <template name="SignupForm">
   {{> userSignupForm}}
 </template>
@@ -5,7 +24,8 @@
 <template name="SignupSuccess">
   <h1>Registration Successful!</h1>
 
-  <p>Please check your email for your account verification link.</p>
+  <p>We sent a verification link to <strong>{{confirmationEmail}}</strong></p>
+  <p>Please check your email shortly.</p>
 
-  <a href="#">Back to Home</a>
+  <a href="/">Back to Home</a>
 </template>

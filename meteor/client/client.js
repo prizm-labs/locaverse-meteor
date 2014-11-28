@@ -12,6 +12,7 @@
       onSuccess: function(operation, result, template) {
         console.log('onSuccess',result);
         // Transition to email confirmation
+        Session.set('confirmation_email',result.email);
 
         // Route to registration successful page
         Router.go('signup-success');
@@ -21,6 +22,30 @@
       }
     }
   });
+
+  UserService = {
+    login: function(email,password){
+      Meteor.loginWithPassword({email:email},password, 
+        function(error){
+          if (error){
+            console.log(error);
+            Session.set('loginValidationMessage',error.reason);
+          } else {
+            // if successful redirect to user dashboard
+            Router.go('dashboard');
+          }
+        });
+    },
+    logout: function(){
+      Meteor.logout(function(error){
+        if (!error){
+          Router.go('landing');
+        } else {
+         
+        }
+      })
+    }
+  }
 
   // // counter starts at 0
   // Session.setDefault("counter", 0);
@@ -37,12 +62,39 @@
   //     Session.set("counter", Session.get("counter") + 1);
   //   }
   // });
+  Template.LoginFullPage.helpers({
+    validationMessage: function(){
+      return Session.get('loginValidationMessage');
+    }
+  });
+
+  Template.LoginFullPage.events({
+    "click #login": function(){
+
+      // Validate login
+      var email = $('#email').val(), password = $('#password').val();
+      UserService.login(email,password);
+      
+    }
+  });
+
+  Template.Dashboard.events({
+    'click .logout': function(){
+      UserService.logout();
+    }
+  })
 
   Template.userSignupForm.helpers({
     accountTypeIsSelected: function(){
       var selection = AutoForm.getFieldValue("userSignupForm","account_type");
       console.log(selection);
       return !(typeof selection==='undefined');
+    }
+  });
+
+  Template.SignupSuccess.helpers({
+    confirmationEmail: function(){
+      return Session.get('confirmation_email');
     }
   });
 
