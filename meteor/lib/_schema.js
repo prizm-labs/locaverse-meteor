@@ -180,14 +180,19 @@ Schema.ShipDate = new SimpleSchema({
 });
 
 Schema.Variety = new SimpleSchema({
-    name: {
-        type: String
-    },
     full_name: {
         type: String
     },
-    parent_id: {
+    variety_name: {
         type: String
+    },
+    alternate_names: {
+        type: [String],
+        optional: true
+    },
+    parent_id: {
+        type: String,
+        optional: true
     },
     depth: {
         type: Number
@@ -195,7 +200,10 @@ Schema.Variety = new SimpleSchema({
     default_image_id: {
         type: String
     },
-
+    tags: {
+        type: [String],
+        optional: true
+    }
 });
 
 Schema.UserProfile = new SimpleSchema({

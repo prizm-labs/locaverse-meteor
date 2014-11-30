@@ -5,8 +5,6 @@
         <span class="required-field-indicator">*</span>&nbsp;
       {{/if}}
       {{afFieldLabelText name=name}}</label>
-    <!-- {{> afFieldInput name=name}} -->
-    <!-- {{> afFieldInput fieldConfiguration}} -->
     {{> Template.dynamic template="afFieldInput" data=fieldConfiguration}}
     {{#if afFieldIsInvalid name=name}}
     <span class="help-block">{{{afFieldMessage name=name}}}</span>
