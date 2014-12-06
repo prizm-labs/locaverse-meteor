@@ -8,7 +8,7 @@ fieldnames=["parentName","varietyName","subVarietyName","tags","parentImage","va
 def convert(filename):
   csv_filename = filename[0]
   print "Opening CSV file: ",csv_filename 
-  f=open(csv_filename, 'r')
+  f=open(csv_filename, 'rU')
   csv_reader = csv.DictReader(f,fieldnames)
   json_filename = csv_filename.split(".")[0]+".json"
   print "Saving JSON to file: ",json_filename
